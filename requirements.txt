@@ -1,0 +1,9 @@
+seaborn
+sklearn
+tensorflow-gpu==1.13.1
+Keras==2.2.4
+opencv-python==4.1.0.25
+imutils
+Pillow
+numpy
+matplotlib

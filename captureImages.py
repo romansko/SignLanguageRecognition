@@ -1,7 +1,19 @@
+#!/usr/bin/env python3
 """
-Inspired by https://github.com/jgv7/CNN-HowManyFingers/blob/master/application.py
+Dataset building utility.
+Based on https://github.com/jgv7/CNN-HowManyFingers/blob/master/application.py
 Script captures photos to directories. [A->Z].
 Mapping Hebrew AlphaBet to English AlphaBet by letter order.
+
+Controls:
+use arrows to move the ROI box.
+press 1 to turn capturing on/off.
+press 2 to display/hide binary mask.
+press english letters to choose destination folder.
+press esc to exit.
+
+@author: Netanel Azoulay
+@author: Roman Koifman
 """
 
 import os
@@ -31,6 +43,10 @@ def initClass(name):
 
 
 def captureImages():
+    """
+    Main loop.
+    """
+
     global font
     global takingData, dataColor
     global className, count

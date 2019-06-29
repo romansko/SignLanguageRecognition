@@ -1,3 +1,13 @@
+#!/usr/bin/env python3
+"""
+Project Utilities.
+
+Usage in python console: "from utils import function_name".
+
+@author: Netanel Azoulay
+@author: Roman Koifman
+"""
+
 import cv2
 import glob
 import os
@@ -5,10 +15,13 @@ import random
 from projectParams import alphaBet
 
 
-# Flip all images in given rootDirectory.
-# Make a new copy.
-# rootDir must contain sub-folders which contains only images. Ex: "Images/train".
 def flipImages(rootDir, imgFormat=None):
+    """
+    Flip all images in given rootDirectory. (Make new copies).
+
+    :param rootDir: the folder that contain sub-folders which with images. Ex: "Images/train".
+    :param imgFormat: 'jpg' or 'png'. If none provided, both will be used.
+    """
     if imgFormat is None:
         flipImages(rootDir, 'jpg')
         flipImages(rootDir, 'png')
@@ -26,9 +39,13 @@ def flipImages(rootDir, imgFormat=None):
                 print("Flipped " + fileName + "as " + flippedFilename)
 
 
-# Apply binary mask on colored image.
-# img = 3D np array.
 def binaryMask(img):
+    """
+    Apply binary mask on raw rgb image.
+
+    :param img: 3D np array.
+    :return: processed image. (3D np array).
+    """
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     img = cv2.GaussianBlur(img, (7, 7), 3)
     img = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
@@ -36,10 +53,13 @@ def binaryMask(img):
     return new
 
 
-# Apply binary mask on every img in the specified directory.
-# English path only.
-# rootDir must contain sub-folders which contains only images. Ex: "Images/train".
 def applyBinaryMasks(rootDir, imgFormat=None):
+    """
+    Apply binary mask on every img in the specified directory.
+
+    :param rootDir: English path. must contain sub-folders which contains only images. Ex: "Images/train".
+    :param imgFormat: 'jpg' or 'png'. If none provided, both will be used.
+    """
     if imgFormat is None:
         applyBinaryMasks(rootDir, 'jpg')
         applyBinaryMasks(rootDir, 'png')
@@ -56,9 +76,14 @@ def applyBinaryMasks(rootDir, imgFormat=None):
                 print("Applied Binary Mask on " + fileName)
 
 
-# Move random files between folders.
-# English path only.
-def moveRandomFiles(from_dir, to_dir, percent):  # percent = % of files to take from the folder
+def moveRandomFiles(from_dir, to_dir, percent):
+    """
+    Move random files between folders.
+
+    :param from_dir: English path. Source directory.
+    :param to_dir: English path. Destination directory.
+    :param percent: Percent of files to move out of the source folder.
+    """
     count = len(os.listdir(from_dir))
     numToMove = int(percent * count)
     try:
@@ -73,15 +98,26 @@ def moveRandomFiles(from_dir, to_dir, percent):  # percent = % of files to take 
         print("moved file " + fileName + " from " + from_dir + " to " + to_dir)
 
 
-# move random data between test and train folders.  iterate subdirectories.
-# Folders must exist!!
-# Ex for moving for validation data: "moveProjectData('images/train', 'images/validation', 0.1).
 def moveProjectData(source="captureData/train", dest="captureData/test", percent=0.2):
+    """
+    Move random data between test and train folders.  iterate subdirectories.
+
+    :param source: English path. Source directory.
+    :param dest: English path. Destination directory.
+    :param percent: Percent of files to move out of the source folder.
+    :raises: OSError if source folder does not exist.
+    """
     for subdir in os.listdir(source):
         moveRandomFiles(from_dir=source + "/" + subdir, to_dir=dest + "/" + subdir, percent=percent)
 
 
 def convertIndexToHebrewLetter(index):
+    """
+    Convert index to hebrew letter.
+
+    :param index: index in the range[0,23]. Out of range index will be converted to blank char.
+    :return: Hebrew letter.
+    """
     if index == 23:  # deletion
         return 'del'
     elif 0 <= index <= 22:  # 22 = space
@@ -91,6 +127,12 @@ def convertIndexToHebrewLetter(index):
 
 
 def convertEnglishToHebrewLetter(englishLetter):
+    """
+    Convert english letter to hebrew letter.
+
+    :param englishLetter: English letter.
+    :return: Hebrew letter.
+    """
     if englishLetter == ' ' or englishLetter == 'w' or englishLetter == 'W':
         return ' '
     elif englishLetter == 'x' or englishLetter == 'X':
@@ -104,6 +146,12 @@ def convertEnglishToHebrewLetter(englishLetter):
 
 
 def convertHebrewLetterToFinal(hebrewLetter):
+    """
+    Convert hebrew letter to final representation. Not will be changed if not convertable.
+
+    :param hebrewLetter: Hebrew letter.
+    :return: Final representation Hebrew letter.
+    """
     if hebrewLetter == 'כ':
         return 'ך'
     elif hebrewLetter == 'מ':
@@ -118,8 +166,13 @@ def convertHebrewLetterToFinal(hebrewLetter):
         return hebrewLetter
 
 
-# Convert hebrew string letters to finals if needed (After space).
 def finalizeHebrewString(hebrewString):
+    """
+    Convert hebrew string letters to finals if needed (After space).
+
+    :param hebrewString: Hebrew sentence.
+    :return: Valid hebrew sentence with final letters representation.
+    """
     if type("hebrewString") is not str or len(hebrewString) == 0:
         return hebrewString
     hebrewString = hebrewString.replace('כ ', 'ך ')
@@ -131,8 +184,13 @@ def finalizeHebrewString(hebrewString):
     return hebrewString
 
 
-# Convert english string (representing keys) to hebrew string, finalizing final letters after space.
 def convertEnglishStringToHebrew(englishString):
+    """
+    Convert english string (representing ids) to hebrew string, finalizing final letters after space.
+
+    :param englishString: english sentence.
+    :return: Valid hebrew sentence with final letters representation.
+    """
     for c in range(len(alphaBet)):
         eng1 = chr(ord('a') + c)
         eng2 = chr(ord('A') + c)

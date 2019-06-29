@@ -1,5 +1,9 @@
+#!/usr/bin/env python3
 """
 This file contains project global parameters.
+
+@author: Netanel Azoulay
+@author: Roman Koifman
 """
 import os
 from PIL import ImageFont
@@ -25,6 +29,12 @@ imgDim = 128
 nbatch = 128  # 32 default. Number of samples to propagate each epoch.
 learnRate = 0.001
 
+# Dataset folders
+trainFolder = 'images/train/'
+validFolder = 'images/validation/'
+testFolder = 'images/test/'
+
+# Log folder to save weights and training graphs.
 logFolder = "Temp"
 try:
     os.makedirs(logFolder)

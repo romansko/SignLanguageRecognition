@@ -1,12 +1,23 @@
+#!/usr/bin/env python3
 """
+OpenCV integration with Keras.
 Inspired by https://github.com/jgv7/CNN-HowManyFingers/blob/master/application.py
+
+Controls:
+use arrows to move the ROI box.
+press p to turn prediction on/off.
+press m to display/hide binary mask.
+press esc to exit.
+
+@author: Netanel Azoulay
+@author: Roman Koifman
 """
 
 from keras.models import load_model
 import numpy as np
 import copy
 from utils import *
-from projectParams import classes, font, imgDim, modelPath, modelWeights
+from projectParams import *
 import asyncio
 from PIL import ImageDraw, Image
 import os
@@ -25,6 +36,11 @@ threshold = 0.8  # Between 0 and 1
 
 
 async def predictImg(roi):
+    """
+    Asynchronously prediction.
+
+    :param roi: preprocessed image.
+    """
     global count, sentence
     global pred, prevPred
 
@@ -55,6 +71,11 @@ async def predictImg(roi):
 
 
 def main():
+    """
+    Main looping function.
+    Apply pre-processing and asynchronously call for prediction.
+
+    """
     global dataColor, window
     global count, pred
 

@@ -1,11 +1,16 @@
+#!/usr/bin/env python3
 """
-Inspired by https://github.com/jaredvasquez/CNN-HowManyFingers/blob/master/trainModel.ipynb
+Script for training the cnn12 model.
+Based on https://github.com/jaredvasquez/CNN-HowManyFingers/blob/master/trainModel.ipynb
+
+@author: Netanel Azoulay
+@author: Roman Koifman
 """
 
 import keras
-from keras.callbacks import EarlyStopping, ModelCheckpoint, CSVLogger
+from keras.callbacks import ModelCheckpoint, CSVLogger
 from keras.preprocessing.image import ImageDataGenerator
-from projectParams import classes, modelWeights, modelPath, logFolder
+from projectParams import *
 from shutil import copyfile
 from cnn12 import imgDim, getModel
 import matplotlib.pyplot as plt
@@ -14,14 +19,17 @@ import os
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
+# Training Params.
 trainWeights = 'trainWeights.h5'  # weights to save
 epochs = 50
 
-# HyperParams
-nbatch = 128  # 32 default.
-
 
 class CustomCallback(keras.callbacks.Callback):
+    """
+    Custom callback class in order to save weights after each epoch.
+    Was used to backup weights via Azure Virtual Machine.
+    """
+
     def on_epoch_end(self, epoch, logs=None):
         try:
             copyfile(trainWeights, "Temp/epoch" + str(epoch) + "_weights.h5")
@@ -31,12 +39,12 @@ class CustomCallback(keras.callbacks.Callback):
 
 
 def trainModel():
-    # ImageDataGenerator purpose:
-    # Label the data from the directories.
-    # Augment the data with shifts, rotations, zooms, and mirroring.
-    # Mirroring will help to ensure that the data are not biased to a particular handedness.
-    # Changes are applied Randomly.
+    """
+    Train the CNN12 model by Loading Training and Validation data.
+    At the end of the training a learning graph will be plotted.
+    """
 
+    # Load training data with augmentation.
     train_datagen = ImageDataGenerator(rescale=1. / 255.,
                                        rotation_range=10,  # randomly rotate up to 40 degrees.
                                        width_shift_range=0.2,  # randomly shift range.
@@ -45,25 +53,25 @@ def trainModel():
                                        zoom_range=0.2,
                                        fill_mode="nearest")  # fill new pixels created by shift
 
-    train_generator = train_datagen.flow_from_directory('images/train/',
+    train_generator = train_datagen.flow_from_directory(trainFolder,
                                                         target_size=(imgDim, imgDim),
                                                         color_mode='grayscale',
                                                         batch_size=nbatch,
                                                         classes=classes,
                                                         class_mode="categorical")
 
-    # Validation Data (10% of train data)
+    # # Load validation data (10% of original train data).
 
     valid_datagen = ImageDataGenerator(rescale=1. / 255.)
 
-    valid_generator = valid_datagen.flow_from_directory('images/validation/',
+    valid_generator = valid_datagen.flow_from_directory(validFolder,
                                                         target_size=(imgDim, imgDim),
                                                         color_mode='grayscale',
                                                         batch_size=nbatch,
                                                         classes=classes,
                                                         class_mode="categorical")
 
-    model = getModel(weightsPath=modelWeights)
+    model = getModel(weightsPath=modelWeights)  # Build cnn12 model.
     model.save(modelPath)
     model.summary()
 
@@ -72,21 +80,13 @@ def trainModel():
 
     csv_logger = CSVLogger(logFolder + '/training.csv')
 
-    # EarlyStopping = method to stop training when a monitored quantity has stopped improving.
-    # Define a callback.Set monitor as val_acc, patience as 5 and mode as max so that if val_acc does not improve over 5
-    # epochs, terminate the training process.
-    # can also do on val_loss.
     ccb = CustomCallback()
     callbacks_list = [
-        # EarlyStopping(monitor='val_acc', patience=5, mode='max'),
-        ModelCheckpoint(filepath=trainWeights, monitor='val_acc'),  # save_best_only=True),
+        ModelCheckpoint(filepath=trainWeights, monitor='val_acc'),
         ccb,
         csv_logger
     ]
 
-    # os.environ["CUDA_VISIBLE_DEVICES"]="0"      # visible devices
-    # import tensorflow as tf
-    # with tf.device('cpu:0'):                    # Device to run on. cpu:0 / gpu:0 / gpu:1.
     history = model.fit_generator(
         train_generator,
         steps_per_epoch=step_size_train,

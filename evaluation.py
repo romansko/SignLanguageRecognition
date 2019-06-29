@@ -1,6 +1,14 @@
+#!/usr/bin/env python3
+"""
+Model evaluation script using the test dataset.
+
+@author: Netanel Azoulay
+@author: Roman Koifman
+"""
+
 from keras.preprocessing.image import ImageDataGenerator
-from projectParams import classes, nbatch, imgDim, logFolder, modelWeights
-from cnn12 import getModel
+from projectParams import *
+from keras.models import load_model
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
@@ -8,12 +16,15 @@ import seaborn as sn
 import sys
 import os
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
 
-size = 1024#  Maximum Test Batch size. Can choose whatever you want.
+# Evaluation params
+size = nbatch  # Maximum Test Batch size.
 
-print("\nLoading Model..")
-model = getModel(weightsPath=modelWeights)
+
+print("\nLoading Model and Weights..")
+model = load_model(modelPath)
+model.load_weights(modelWeights)
 
 # Test Data (20%).
 print("Loading test data..")
@@ -25,7 +36,7 @@ test_datagen = ImageDataGenerator(rescale=1. / 255.,
                                   zoom_range=0.2,
                                   fill_mode="nearest")  # fill new pixels created by shift
 
-test_generator = test_datagen.flow_from_directory('captureData/',
+test_generator = test_datagen.flow_from_directory(testFolder,
                                                   target_size=(imgDim, imgDim),
                                                   color_mode='grayscale',
                                                   batch_size=nbatch,

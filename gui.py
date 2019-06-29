@@ -1,20 +1,24 @@
+#!/usr/bin/env python3
+"""
+Main application. The GUI of the software.
+
+@author: Netanel Azoulay
+@author: Roman Koifman
+"""
+
+import asyncio
+import copy
 import time
 import tkinter
-
-from PIL import Image, ImageDraw, ImageTk
-
-from keras.models import load_model
-import numpy as np
-import copy
-from utils import *
 from tkinter import *
-import PIL.Image
-from projectParams import *
-import asyncio
-from PIL import Image, ImageTk
 from tkinter import Tk, filedialog
-from tkinter.ttk import Frame, Label, Style
-import os
+from tkinter.ttk import Label
+import numpy as np
+from PIL import Image, ImageTk
+from PIL import ImageDraw
+from keras.models import load_model
+from projectParams import *
+from utils import *
 
 global text_file_num, e1, freq, glob_root
 
@@ -27,12 +31,17 @@ dataColor = (0, 255, 0)
 pred = ''
 prevPred = ''
 sentence = ""
-defualt_freq = 15
-count = defualt_freq
+default_freq = 15
+count = default_freq
 threshold = 0.8  # Between 0 and 1
 
 
 async def predictImg(roi):
+    """
+    Asynchronously prediction.
+
+    :param roi: preprocessed image.
+    """
     global count, sentence
     global pred, prevPred, textForm
 
@@ -71,7 +80,7 @@ class App:
         global textForm, text_file_num, freq
         window.geometry("700x620+400+100")  # x:y
         text_file_num = 1
-        freq = defualt_freq
+        freq = default_freq
         # create function add menu
         self.create_menu(window)
         window.resizable(False, False)

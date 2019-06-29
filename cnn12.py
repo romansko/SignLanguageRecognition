@@ -2,6 +2,9 @@
 A deep network was constructed accepting input of image dimensions of 128 x 128 with one channel (grayscale images).
 The network was constructed by following Karpathy's tutorial.
 Based on https://github.com/hemavakade/CNN-for-Image-Classification
+
+@author: Netanel Azoulay
+@author: Roman Koifman
 """
 
 from keras.layers import Conv2D, MaxPooling2D
@@ -16,6 +19,12 @@ from projectParams import classes, imgDim, learnRate
 
 
 def getModel(weightsPath=None):
+    """
+    Build cnn12 model and load pre-trained weights if provided.
+
+    :param weightsPath: pre-trained weights h5 file.
+    :return: compiled cnn12 model.
+    """
     model = Sequential()
 
     model.add(Conv2D(32, (3, 3), input_shape=(imgDim, imgDim, 1)))

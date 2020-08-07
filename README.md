@@ -51,7 +51,7 @@ After downloading the repo, you will need to setup database and the model:
 
 2. Run [SetupScript.iss](SetupScript.iss) script file which will pack resources and models under single exe setup in Releases folder. ([InnoSetup](http://www.jrsoftware.org/isinfo.php) must be installed).
 
-Built setup could be downloaded from the following [OneDrive Link](https://1drv.ms/u/s!Aqmah9OMflvl_Sq9ICets9vqc-TK)
+Installtion setup could be downloaded from the following [OneDrive Link](https://1drv.ms/u/s!Aqmah9OMflvlgZgkJLme0zqwcGFgog?e=5YCYXl)
 
 
 

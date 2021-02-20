@@ -59,3 +59,7 @@ Installation setup could be downloaded from the following [OneDrive Link](https:
 
 The Image preprocessing, OpenCV and CNN integration are based on Dr. Jared Vasquez's [CNN-HowManyFingers](https://github.com/jaredvasquez/CNN-HowManyFingers) project.
 The CNN architecture used in this project is based on Hemalatha Vakade's [CNN-for-Image-Classification](https://github.com/hemavakade/CNN-for-Image-Classification) project.
+
+# Authors 
+* [Netanel Azoulay](https://github.com/netanel8884)
+* [Roman Koifman](https://github.com/Romansko)

@@ -2,7 +2,7 @@ seaborn
 sklearn
 tensorflow-gpu==2.4.0
 Keras==2.2.4
-opencv-python==4.1.0.25
+opencv-python==4.2.0.32
 imutils
 Pillow
 numpy
